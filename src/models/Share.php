@@ -3,7 +3,8 @@
 namespace Models;
 
 /**
- * @Entity @Table(name="shares")
+ * @Entity(repositoryClass="Repositories\Share")
+ * @Table(name="shares")
  */
 class Share {
 	/**

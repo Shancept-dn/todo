@@ -5,7 +5,8 @@ namespace Models;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="users")
+ * @Entity(repositoryClass="Repositories\User")
+ * @Table(name="users")
  */
 class User {
 	/**

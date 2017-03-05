@@ -3,7 +3,8 @@
 namespace Models;
 
 /**
- * @Entity @Table(name="items")
+ * @Entity(repositoryClass="Repositories\Item")
+ * @Table(name="items")
  */
 class Item {
 	/**

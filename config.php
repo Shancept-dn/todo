@@ -4,6 +4,11 @@ return [
 	//Default timezone
 	'timezone' => 'Asia/Novosibirsk',
 
-	//DB connection string "mysql://{USER}:{PASSWORD}@{HOST}/{DATABASE}"
-	'db' => 'mysql://root@localhost/todo',
+	//DB settings
+	'db' => [
+		//connection string "mysql://{USER}:{PASSWORD}@{HOST}/{DATABASE}"
+		'url' => 'mysql://root@localhost/todo',
+		'isDevMode' => true,
+		'models' => __DIR__.'/src/models'
+	],
 ];

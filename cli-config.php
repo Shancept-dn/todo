@@ -1,5 +1,5 @@
 <?php
-// cli-config.php
-require_once "bootstrap.php";
 
-return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet($entityManager);
+$config = require('bootstrap.php');
+
+return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet(Api::app($config)->db);

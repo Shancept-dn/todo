@@ -25,10 +25,10 @@ class Api {
 
 	/**
 	 * Создает (при первом вызове) и возвращает инстанс класса
-	 * @param array $config
+	 * @param array|null $config
 	 * @return Api
 	 */
-	public static function app($config) {
+	public static function app($config = null) {
 		if(null === self::$_instance) self::$_instance = new self($config);
 
 		return self::$_instance;

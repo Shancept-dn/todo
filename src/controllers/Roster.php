@@ -19,6 +19,57 @@ class Roster extends \Controller {
 	}
 
 	/**
+	 * Возвращает информацию о списке (можно ли редактировать, кому расшарен, список дел)
+	 * @return array
+	 * @throws \HttpException
+	 */
+	public function actionInfoGET() {
+		//Проверяем входные данные
+		$id = $this->checkInputData('id', 'int');
+
+		//Получаем список
+		$roster = $this->findAndCheckRoster($id, true);
+
+		//Текущий аутентифицированный пользователь
+		$userId = \Api::app()->auth->getUser()->getId();
+
+		//Основная информация
+		$info = [
+			'id' => $roster->getId(),
+			'name' => $roster->getName(),
+			'is_mine' => ($roster->getUser()->getId() === $userId),
+			'items' => \Api::app()->db->getRepository('Models\Item')->getItems($roster->getId()),
+		];
+
+		//Если это собственный список - собираем информацию о том кому расшарен
+		if($info['is_mine']) {
+			$info['shares'] = [];
+			foreach($roster->getShares() as $share) {
+				$info['shares'][] = [
+					'id' => $share->getUser()->getId(),
+					'login' => $share->getUser()->getLogin(),
+					'readonly' => $share->getReadonly(),
+				];
+			}
+		} else { //Иначе - можно ли редактировать список
+			$info['readonly'] = !\Api::app()->db->getRepository('Models\Roster')->checkRosterAllowEditing($roster, $userId);
+		}
+
+		return $info;
+	}
+
+	/**
+	 * Возвращает списки, доступные пользователю (собственные и расшаренные)
+	 * @return array
+	 * @throws \HttpException
+	 */
+	public function actionListGET() {
+		$userId = \Api::app()->auth->getUser()->getId();
+
+		return \Api::app()->db->getRepository('Models\Roster')->getUserAllowedRosters($userId);
+	}
+
+	/**
 	 * Переименовывает список
 	 * @return array
 	 * @throws \HttpException
@@ -43,7 +94,7 @@ class Roster extends \Controller {
 	 * @throws \HttpException
 	 */
 	public function actionDeleteDELETE() {
-		//Проверм входные данные
+		//Проверяем входные данные
 		$id = $this->checkInputData('id', 'int');
 
 		//Получаем список
@@ -61,7 +112,7 @@ class Roster extends \Controller {
 	 * @throws \HttpException
 	 */
 	public function actionCreatePOST() {
-		//Проверм входные данные
+		//Проверяем входные данные
 		$name = $this->checkInputData('name');
 
 		//Создаем список
@@ -71,17 +122,27 @@ class Roster extends \Controller {
 	}
 
 	/**
-	 * Ищет список по id и проверяет принадлежит ли он текущему пользователю
+	 * Ищет список по id и проверяет может ли текущий пользователь его редактировать (читать)
 	 * @param int $id
+	 * @param bool $checkReadonly проверить у списка только права на чтение
 	 * @return null|\Models\Roster
 	 * @throws \HttpException
 	 */
-	private function findAndCheckRoster($id) {
+	private function findAndCheckRoster($id, $checkReadonly = false) {
 		//Ищем список по id
 		if(null === $roster = \Api::app()->db->find('Models\Roster', $id)) throw new \HttpException(404);
 
-		//Проверяем принадлежит ли список авторизованному пользователю
-		if(\Api::app()->auth->getUser()->getId() !== $roster->getUser()->getId()) throw new \HttpException(403);
+		$userId = \Api::app()->auth->getUser()->getId();
+
+		if($checkReadonly) {
+			//Проверяет может ли текущий пользователь ситать список
+			if(!\Api::app()->db->getRepository('Models\Roster')->checkRosterAllowReading($roster, $userId))
+				throw new \HttpException(403);
+		} else {
+			//Проверяет может ли текущий пользователь редактировать список
+			if(!\Api::app()->db->getRepository('Models\Roster')->checkRosterAllowEditing($roster, $userId))
+				throw new \HttpException(403);
+		}
 
 		return $roster;
 	}

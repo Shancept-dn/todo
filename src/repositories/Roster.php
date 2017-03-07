@@ -7,6 +7,43 @@ use Doctrine\ORM\EntityRepository;
 class Roster extends EntityRepository {
 
 	/**
+	 * Проверяет может ли пользователь редактировать список
+	 * @param \Models\Roster $roster
+	 * @param int $userId
+	 * @return bool
+	 */
+	public function checkRosterAllowEditing($roster, $userId) {
+		//Если список принадлежит пользователю
+		if($roster->getUser()->getId() === $userId) return true;
+
+		//Проверяем расшарен ли список пользовалю
+		foreach($roster->getShares() as $share) {
+			if($share->getUser()->getId() !== $userId) continue;
+			if(!$share->getReadonly()) return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Проверяет может ли пользователь смотреть список
+	 * @param \Models\Roster $roster
+	 * @param int $userId
+	 * @return bool
+	 */
+	public function checkRosterAllowReading($roster, $userId) {
+		//Если список принадлежит пользователю
+		if($roster->getUser()->getId() === $userId) return true;
+
+		//Проверяем расшарен ли список пользовалю
+		foreach($roster->getShares() as $share) {
+			if($share->getUser()->getId() === $userId) return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Переименовать список
 	 * @param \Models\Roster $roster
 	 * @param string $name
@@ -49,12 +86,15 @@ class Roster extends EntityRepository {
 	}
 
 	/**
-	 * Возвращает списки пользоваля с данными о расшаривании
+	 * Возвращает списки, доступные пользователю (собственные и расшаренные)
 	 * @param int $userId
 	 * @return array
 	 */
-	public function getUserRosters($userId) {
-		$dql = 'SELECT r,i,s,su FROM Models\Roster r JOIN r.user u JOIN r.items i JOIN r.shares s JOIN s.user su WHERE u.id = ?1';
+	public function getUserAllowedRosters($userId) {
+		$dql = 	'SELECT r FROM Models\Roster r '.
+				'JOIN r.user ru LEFT JOIN r.shares rs '.
+				'LEFT JOIN rs.user rsu '.
+				'WHERE ru.id = ?1 OR rsu.id = ?1';
 
 		return $this->getEntityManager()->createQuery($dql)
 			->setParameter(1, $userId)

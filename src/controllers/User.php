@@ -10,7 +10,7 @@ class User extends \Controller {
 	 * @throws \HttpException
 	 */
 	public function actionJoinPOST() {
-		//Проверм входные данные
+		//Проверяем входные данные
 		$login = $this->checkInputData('login');
 		$password = $this->checkInputData('password');
 

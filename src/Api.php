@@ -147,7 +147,7 @@ class Api {
 		foreach($this->_headers as $header) header($header);
 
 		//Если есть JSON-данные  - кодируем в JSON-строку и выводим
-		if($jsonData) {
+		if(null !== $jsonData) {
 			header('Content-type: application/json; charset=utf8');
 			echo json_encode($jsonData);
 		}

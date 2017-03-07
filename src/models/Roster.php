@@ -59,6 +59,10 @@ class Roster {
 		$this->shares[] = $share;
 	}
 
+	public function getShares() {
+		return $this->shares;
+	}
+
 	public function setUser($user) {
 		$user->addRoster($this);
 		$this->user = $user;

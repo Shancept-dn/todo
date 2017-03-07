@@ -21,6 +21,11 @@ class Item {
 	 * @var string
 	 */
 	protected $text;
+	/**
+	 * @Column(type="integer")
+	 * @var integer
+	 */
+	protected $done = 0;
 
 	public function getId() {
 		return $this->id;
@@ -41,5 +46,13 @@ class Item {
 
 	public function getRoster() {
 		return $this->roster;
+	}
+
+	public function getDone() {
+		return $this->done;
+	}
+
+	public function setDone($done) {
+		$this->done = $done;
 	}
 }

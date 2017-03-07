@@ -53,6 +53,6 @@ class Item {
 	}
 
 	public function setDone($done) {
-		$this->done = $done;
+		$this->done = (int)(!!$done);
 	}
 }

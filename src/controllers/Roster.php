@@ -107,6 +107,58 @@ class Roster extends \Controller {
 	}
 
 	/**
+	 * Расшарить (PUT) или отшарить (DELETE) список пользователю
+	 * @return array
+	 * @throws \HttpException
+	 */
+	public function actionShare() {
+		//Проверяем входные данные
+		$id = $this->checkInputData('id', 'int');
+		$userId = $this->checkInputData('user_id', 'int');
+		$readonly = $this->checkInputData('readonly', 'int', true);
+
+		//Получаем список
+		$roster = $this->findAndCheckRoster($id);
+
+		//Проверяем принадлежит ли список текущему пользователю
+		if($roster->getUser()->getId() !== \Api::app()->auth->getUser()->getId()) throw new \HttpException(403);
+
+		//Ищем пользователя, которому хотим расшарить список
+		if(null === $user = \Api::app()->db->find('Models\User', $userId)) throw new \HttpException(400);
+
+		//Проверяем расшарен ли уже этот список переданному пользователю
+		$shared = false;
+		foreach($roster->getShares() as $share) {
+			if($share->getUser()->getId() !== $user->getId()) continue;
+			$shared = $share;
+			break;
+		}
+
+		//Request метод
+		$method = \Api::app()->request->getMethod();
+
+		//Если PUT запрос - расшарить список
+		if($method == 'PUT') {
+			if(false === $shared) {
+				\Api::app()->db->getRepository('Models\Share')->addShare($roster, $user, $readonly);
+			} else {
+				$shared->setReadonly($readonly);
+				\Api::app()->db->getRepository('Models\Share')->saveShare($share);
+			}
+			return ['result' => 'success'];
+		}
+		//DELETE - "отшарить" список
+		if($method == 'DELETE') {
+			if(false !== $shared) {
+				\Api::app()->db->getRepository('Models\Share')->deleteShare($shared);
+			}
+			return ['result' => 'success'];
+		}
+
+		throw new \HttpException(400);
+	}
+
+	/**
 	 * Создает новый список
 	 * @return array
 	 * @throws \HttpException
@@ -135,7 +187,7 @@ class Roster extends \Controller {
 		$userId = \Api::app()->auth->getUser()->getId();
 
 		if($checkReadonly) {
-			//Проверяет может ли текущий пользователь ситать список
+			//Проверяет может ли текущий пользователь читать список
 			if(!\Api::app()->db->getRepository('Models\Roster')->checkRosterAllowReading($roster, $userId))
 				throw new \HttpException(403);
 		} else {

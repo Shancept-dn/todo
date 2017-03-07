@@ -7,6 +7,47 @@ use Doctrine\ORM\EntityRepository;
 class Share extends EntityRepository {
 
 	/**
+	 * Сохранить данные расшаривания
+	 * @param \Models\Share $share
+	 */
+	public function saveShare($share) {
+		$this->getEntityManager()->persist($share);
+		$this->getEntityManager()->flush();
+	}
+
+	/**
+	 * Удалить расшаривание
+	 * @param \Models\Share $share
+	 * @return bool
+	 */
+	public function deleteShare($share) {
+		$this->getEntityManager()->remove($share);
+		$this->getEntityManager()->flush();
+		return true;
+	}
+
+	/**
+	 * Расшарить список
+	 * @param \Models\Roster $roster
+	 * @param \Models\User $user
+	 * @param int|bool $readonly
+	 * @return int
+	 */
+	public function addShare($roster, $user, $readonly) {
+		//Создаем модель
+		$share = new \Models\Share;
+		$share->setRoster($roster);
+		$share->setUser($user);
+		$share->setReadonly($readonly);
+
+		//Сохраняем в БД
+		$this->getEntityManager()->persist($share);
+		$this->getEntityManager()->flush();
+
+		return $share->getId();
+	}
+
+	/**
 	 * Возвращает какие списки пользователя кому расшарены
 	 * @param int $userId
 	 * @return array

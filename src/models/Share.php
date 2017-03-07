@@ -35,7 +35,7 @@ class Share {
 	}
 
 	public function setReadonly($readonly) {
-		$this->readonly = (int)$readonly;
+		$this->readonly = (int)(!!$readonly);
 	}
 
 	public function setRoster($roster) {

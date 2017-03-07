@@ -32,7 +32,7 @@ class Db {
 	}
 
 	/**
-	 * Db constructor.
+	 * Конструктор класса
 	 */
 	private function __construct() {}
 

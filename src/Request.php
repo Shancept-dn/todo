@@ -90,7 +90,6 @@ class Request {
 
 	/**
 	 * Создает инстанс и инициализиует свойства по HTTP-запросу
-	 * Request constructor.
 	 */
 	private function __construct() {
 		$this->_method = self::calcMethod();

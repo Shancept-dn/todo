@@ -78,6 +78,9 @@ class Api {
 		$httpMessage = 'OK';
 		$jsonData = null;
 		try {
+			//Выполняем beforeAction перед выполнением любого экшена
+			$controller->beforeAction(strtolower($actionName), $methodName);
+
 			//Ищем методы в классе
 			foreach($methods as $method) {
 				if(!is_callable([$controller, $method])) continue;
@@ -108,19 +111,21 @@ class Api {
 	/**
 	 * $this->request - возвращает инстанс класса Request
 	 * $this->db - возвращает инстанс подключения к БД
+	 * $this->auth - возвращает инстанс класса Auth
 	 * @param string $name
-	 * @return Request|\Doctrine\ORM\EntityManager|null
+	 * @return Request|\Doctrine\ORM\EntityManager|Auth|null
 	 */
 	public function __get($name) {
 		switch ($name) {
 			case 'request': return Request::getInstance();
 			case 'db': return Db::getEntityManager($this->_config['db']);
+			case 'auth': return Auth::getInstance();
 		}
 		return null;
 	}
 
 	/**
-	 * Api constructor.
+	 * Конструктор класса
 	 * @param array $config
 	 */
 	private function __construct($config) {
@@ -135,6 +140,8 @@ class Api {
 	 */
 	private function render($jsonData, $httpCode = 200, $httpMessage = 'OK') {
 		header('HTTP/1.1 '.$httpCode.( false !== $httpMessage ? ' '.$httpMessage: '' ));
+
+		if($httpCode == 401) header('WWW-Authenticate: Basic realm="Todo"');
 
 		//Отправляем дополнительные headers
 		foreach($this->_headers as $header) header($header);

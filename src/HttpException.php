@@ -62,7 +62,7 @@ class HttpException extends Exception {
 	];
 
 	/**
-	 * HttpException constructor.
+	 * Конструктор класса
 	 * @param int $code
 	 * @param string $message
 	 */

@@ -7,6 +7,16 @@
 class Controller {
 
 	/**
+	 * Выполняется перед всеми экшенами
+	 * @param string $action
+	 * @param string $method
+	 * @return bool
+	 */
+	public function beforeAction($action, $method) {
+		return true;
+	}
+
+	/**
 	 * Отображает 404 ошбку
 	 * Вызывается как action по умолчанию
 	 * @throws HttpException

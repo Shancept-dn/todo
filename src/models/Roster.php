@@ -24,12 +24,12 @@ class Roster {
 	 */
 	protected $name;
 	/**
-	 * @OneToMany(targetEntity="Item", mappedBy="roster")
+	 * @OneToMany(targetEntity="Item", mappedBy="roster", cascade={"remove"})
 	 * @var Item[]
 	 */
 	protected $items = null;
 	/**
-	 * @OneToMany(targetEntity="Share", mappedBy="roster")
+	 * @OneToMany(targetEntity="Share", mappedBy="roster", cascade={"remove"})
 	 * @var Share[]
 	 */
 	protected $shares = null;

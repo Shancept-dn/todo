@@ -8,11 +8,15 @@ class Roster extends EntityRepository {
 
 	/**
 	 * Проверяет может ли пользователь редактировать список
-	 * @param \Models\Roster $roster
+	 * @param \Models\Roster|int $roster
 	 * @param int $userId
 	 * @return bool
 	 */
 	public function checkRosterAllowEditing($roster, $userId) {
+		//Если в качестве $roster передали id - получаем модель
+		if(is_int($roster)) $roster = $this->getEntityManager()->find('Models\Roster', $roster);
+		if(null === $roster) return false;
+
 		//Если список принадлежит пользователю
 		if($roster->getUser()->getId() === $userId) return true;
 
@@ -27,11 +31,15 @@ class Roster extends EntityRepository {
 
 	/**
 	 * Проверяет может ли пользователь смотреть список
-	 * @param \Models\Roster $roster
+	 * @param \Models\Roster|int $roster
 	 * @param int $userId
 	 * @return bool
 	 */
 	public function checkRosterAllowReading($roster, $userId) {
+		//Если в качестве $roster передали id - получаем модель
+		if(is_int($roster)) $roster = $this->getEntityManager()->find('Models\Roster', $roster);
+		if(null === $roster) return false;
+
 		//Если список принадлежит пользователю
 		if($roster->getUser()->getId() === $userId) return true;
 

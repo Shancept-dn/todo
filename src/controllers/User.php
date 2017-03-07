@@ -26,4 +26,35 @@ class User extends \Controller {
 		return ['id' => $userId];
 	}
 
+	/**
+	 * Ищет пользователей по подстроке логина
+	 * @return array
+	 * @throws \HttpException
+	 */
+	public function actionSearchGET() {
+		//Проверяем аутентификацию пользователя
+		if(!\Api::app()->auth->isSuccess())  throw new \HttpException(401);
+
+		//Проверяем входные данные
+		$query = $this->checkInputData('query');
+
+		//Текущий пользователь
+		$userId = \Api::app()->auth->getUser()->getId();
+
+		//Ищем всех пользователей по подстроке
+		$allUsers = \Api::app()->db->getRepository('Models\User')->searchUserMatchLogin($query);
+
+		//Фильтруем пользователей и отдаваемые данные
+		$users = [];
+		foreach($allUsers as $user) {
+			if($user['id'] == $userId) continue; //Текущего пользователя пропускаем
+			$users[] = [
+				'id' => $user['id'],
+				'login' => $user['login'],
+			];
+		}
+
+		return $users;
+	}
+
 }

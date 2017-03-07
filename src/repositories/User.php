@@ -40,4 +40,16 @@ class User extends EntityRepository {
 			->getOneOrNullResult();
 	}
 
+	/**
+	 * Ищет пользователей по подстроке логина
+	 * @param string $query
+	 * @return array
+	 */
+	public function searchUserMatchLogin($query) {
+		return $this->getEntityManager()
+			->createQuery('SELECT u FROM Models\User u WHERE u.login LIKE ?1')
+			->setParameter(1, '%'.$query.'%')
+			->getArrayResult();
+	}
+
 }

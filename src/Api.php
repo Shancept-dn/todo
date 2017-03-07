@@ -54,9 +54,9 @@ class Api {
 
 		//Если класс существует - создаем инстанс, иначе берем стандартный класс Controller
 		if(!class_exists($className)) {
-			$controller = new Controller;
+			$controller = new Controller($inputData);
 		} else {
-			$controller = new $className;
+			$controller = new $className($inputData);
 		}
 
 		//1. check action{actionName}{methodName}
@@ -84,7 +84,7 @@ class Api {
 			//Ищем методы в классе
 			foreach($methods as $method) {
 				if(!is_callable([$controller, $method])) continue;
-				$jsonData = $controller->$method($inputData);
+				$jsonData = $controller->$method();
 				break;
 			}
 		} catch (HttpException $e) { //В случае HTTP-исключения формируем ответ ошибки

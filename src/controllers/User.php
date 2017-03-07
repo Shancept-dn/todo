@@ -6,14 +6,13 @@ class User extends \Controller {
 
 	/**
 	 * Регистрирует пользователя
-	 * @param array $input
 	 * @return array
 	 * @throws \HttpException
 	 */
-	public function actionJoinPOST($input) {
+	public function actionJoinPOST() {
 		//Проверм входные данные
-		if(!isset($input['login']) || !($login = trim($input['login']))) throw new \HttpException(400);
-		if(!isset($input['password']) || !($password = trim($input['password']))) throw new \HttpException(400);
+		$login = $this->checkInputData('login');
+		$password = $this->checkInputData('password');
 
 		//Хешируем пароль
 		$hash = \Api::app()->auth->hashPassword($password);

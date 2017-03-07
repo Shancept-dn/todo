@@ -7,6 +7,20 @@
 class Controller {
 
 	/**
+	 * Хранит массив входных данных из Request
+	 * @var array
+	 */
+	private $input;
+
+	/**
+	 * Конструктор класса
+	 * @param array $input входные данные из Request
+	 */
+	public function __construct($input) {
+		$this->input = $input;
+	}
+
+	/**
 	 * Выполняется перед всеми экшенами
 	 * @param string $action
 	 * @param string $method
@@ -65,6 +79,30 @@ class Controller {
 
 		//Добавляем header "Allow: ..."
 		Api::app()->addHeader('Allow: '.implode(',', $allow));
+	}
+
+	/**
+	 * Проверят и возвращает значение из входных Request данных
+	 * @param string $param
+	 * @param string $type int|string|array|undefined
+	 * @param bool $allowEmpty может быть пустым
+	 * @return array|int|string
+	 * @throws HttpException
+	 */
+	protected function checkInputData($param, $type = 'string', $allowEmpty = false) {
+		if(!is_array($this->input) || !isset($this->input[$param])) throw new \HttpException(400);
+
+		$originalValue = $this->input[$param];
+		switch ($type) {
+			case 'int': $value = (int)$originalValue; break;
+			case 'string': $value = (string)$originalValue; break;
+			case 'array': $value = (array)$originalValue; break;
+			default: $value = $originalValue;
+		}
+
+		if(!$allowEmpty && !$value) throw new \HttpException(400);
+
+		return $value;
 	}
 
 }

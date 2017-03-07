@@ -24,11 +24,7 @@ class Share {
 	 * @Column(type="integer")
 	 * @var integer
 	 */
-	protected $readonly;
-
-	public function __construct() {
-		$this->readonly = 1;
-	}
+	protected $readonly = 1;
 
 	public function getId() {
 		return $this->id;

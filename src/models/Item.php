@@ -3,7 +3,7 @@
 namespace Models;
 
 /**
- * @Entity(repositoryClass="Repositories\Item")
+ * @Entity(repositoryClass="Repositories\Item") @EntityListeners({"\ModelsListener"})
  * @Table(name="items")
  */
 class Item {

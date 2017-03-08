@@ -5,7 +5,7 @@ namespace Models;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="Repositories\Roster")
+ * @Entity(repositoryClass="Repositories\Roster") @EntityListeners({"\ModelsListener"})
  * @Table(name="rosters")
  */
 class Roster {

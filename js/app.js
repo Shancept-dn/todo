@@ -575,7 +575,7 @@
 	/**
 	 * Клик по окну расшаривания - предотвращаем всплывание события
 	 */
-	$(document).on('click', '.shares-data', function(){
+	$(document).on('click', '.shares-data', function(e){
 		e.stopPropagation();
 	});
 

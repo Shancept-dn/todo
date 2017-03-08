@@ -1,0 +1,20 @@
+{{#info.shares.length}}
+<table>
+	<tr>
+		<th align="left">Login</th>
+		<th>Readonly</th>
+		<th></th>
+	</tr>
+	{{#info.shares}}
+	<tr data-id="{{id}}">
+		<td width="100%">{{login}}</td>
+		<td>
+			<input class="js-change-share" type="checkbox" {{#readonly}}checked{{/readonly}} >
+		</td>
+		<td>
+			<button class="nice-button js-delete-share">Delete</button>
+		</td>
+	</tr>
+	{{/info.shares}}
+</table>
+{{/info.shares.length}}

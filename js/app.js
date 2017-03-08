@@ -573,16 +573,16 @@
 	});
 
 	/**
-	 * Клик по окну расшаривания - предотвращаем всплывание событие
+	 * Клик по окну расшаривания - предотвращаем всплывание события
 	 */
-	$('.shares-data').click(function(){
-		return false;
+	$(document).on('click', '.shares-data', function(){
+		e.stopPropagation();
 	});
 
 	/**
 	 * Клик по bg - скрыть окно расшаривания
 	 */
-	$('.shares').click(function(){
+	$(document).on('click', '.shares', function(){
 		$(this).hide();
 	});
 

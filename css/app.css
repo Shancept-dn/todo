@@ -99,3 +99,5 @@ button.nice-button[disabled] {
 }
 .shares h3 { text-align: center; }
 .shares input { padding: 5px; }
+
+#shareUserBtn { vertical-align: top; }

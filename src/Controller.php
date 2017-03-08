@@ -31,6 +31,16 @@ class Controller {
 	}
 
 	/**
+	 * Выполняется после экшена
+	 * @param string $action
+	 * @param string $method
+	 * @return bool
+	 */
+	public function afterAction($action, $method) {
+		return true;
+	}
+
+	/**
 	 * Отображает 404 ошбку
 	 * Вызывается как action по умолчанию
 	 * @throws HttpException

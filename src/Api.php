@@ -87,6 +87,9 @@ class Api {
 				$jsonData = $controller->$method();
 				break;
 			}
+
+			//Выполняем afterAction после выполнениея любого экшена
+			$controller->afterAction(strtolower($actionName), $methodName);
 		} catch (HttpException $e) { //В случае HTTP-исключения формируем ответ ошибки
 			$httpCode = $e->getCode();
 			$httpMessage = $e->getMessage();
@@ -113,13 +116,14 @@ class Api {
 	 * $this->db - возвращает инстанс подключения к БД
 	 * $this->auth - возвращает инстанс класса Auth
 	 * @param string $name
-	 * @return Request|\Doctrine\ORM\EntityManager|Auth|null
+	 * @return Request|\Doctrine\ORM\EntityManager|Auth|Cache|null
 	 */
 	public function __get($name) {
 		switch ($name) {
 			case 'request': return Request::getInstance();
 			case 'db': return Db::getEntityManager($this->_config['db']);
 			case 'auth': return Auth::getInstance();
+			case 'cache': return Cache::getInstance($this->_config['memcached']);
 		}
 		return null;
 	}

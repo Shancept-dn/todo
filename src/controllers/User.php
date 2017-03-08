@@ -23,6 +23,9 @@ class User extends \Controller {
 		//Если такой пользователь уже существует
 		if(false === $userId) return ['error' => 'Login is busy'];
 
+		//Сбрасываем кэш поиска пользователей
+		\Api::app()->cache->deleteByTag('user/search');
+
 		return ['id' => $userId];
 	}
 
@@ -41,8 +44,14 @@ class User extends \Controller {
 		//Текущий пользователь
 		$userId = \Api::app()->auth->getUser()->getId();
 
-		//Ищем всех пользователей по подстроке
-		$allUsers = \Api::app()->db->getRepository('Models\User')->searchUserMatchLogin($query);
+		//Проверяем наличие данных в кэше
+		if(false === $allUsers = \Api::app()->cache->get('searchUserMatchLogin|'.$query)) {
+			//Ищем всех пользователей по подстроке
+			$allUsers = \Api::app()->db->getRepository('Models\User')->searchUserMatchLogin($query);
+
+			//Сохраняем результат в кэш
+			\Api::app()->cache->set('searchUserMatchLogin|'.$query, $allUsers, 'user/search');
+		}
 
 		//Фильтруем пользователей и отдаваемые данные
 		$users = [];

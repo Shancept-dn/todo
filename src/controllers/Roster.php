@@ -131,7 +131,7 @@ class Roster extends \Controller {
 		//Проверяем входные данные
 		$id = $this->checkInputData('id', 'int');
 		$userId = $this->checkInputData('user_id', 'int');
-		$readonly = $this->checkInputData('readonly', 'int', true);
+		$readonly = $this->checkInputData('readonly', 'int', true, true);
 
 		//Получаем список
 		$roster = $this->findAndCheckRoster($id);
@@ -161,6 +161,9 @@ class Roster extends \Controller {
 				$shared->setReadonly($readonly);
 				\Api::app()->db->getRepository('Models\Share')->saveShare($shared);
 			}
+			//Сбрасываем кэш, связанный с застронутым списком
+			\Api::app()->cache->deleteByTag('Roster|'.$roster->getId());
+
 			return ['result' => 'success'];
 		}
 		//DELETE - "отшарить" список
@@ -168,11 +171,11 @@ class Roster extends \Controller {
 			if(false !== $shared) {
 				\Api::app()->db->getRepository('Models\Share')->deleteShare($shared);
 			}
+			//Сбрасываем кэш, связанный с застронутым списком
+			\Api::app()->cache->deleteByTag('Roster|'.$roster->getId());
+
 			return ['result' => 'success'];
 		}
-
-		//Сбрасываем кэш, связанный с застронутым списком
-		\Api::app()->cache->deleteByTag('Roster|'.$roster->getId());
 
 		throw new \HttpException(400);
 	}

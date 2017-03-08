@@ -8,6 +8,10 @@ button.nice-button {
 	padding: 5px;
 	cursor: pointer;
 }
+button.nice-button[disabled] {
+	color: lightgray;
+	cursor: default;
+}
 
 /* main app windows with lists */
 .todoapp {
@@ -72,3 +76,26 @@ button.nice-button {
 }
 .action-editing, .action-default { float: left; }
 .action-editing { display: none; }
+
+/* Shares window */
+.shares {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+	z-index: 999;
+	display: none;
+}
+.shares-data {
+	background: white;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+	position: relative;
+	top: 100px;
+	width: 500px;
+	margin: 0 auto;
+	padding: 1px 15px 15px 15px;
+}
+.shares h3 { text-align: center; }
+.shares input { padding: 5px; }

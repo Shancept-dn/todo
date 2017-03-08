@@ -96,11 +96,13 @@ class Controller {
 	 * @param string $param
 	 * @param string $type int|string|array|undefined
 	 * @param bool $allowEmpty может быть пустым
+	 * @param bool $optional параметр может быть не передан
 	 * @return array|int|string
 	 * @throws HttpException
 	 */
-	protected function checkInputData($param, $type = 'string', $allowEmpty = false) {
-		if(!is_array($this->input) || !isset($this->input[$param])) throw new \HttpException(400);
+	protected function checkInputData($param, $type = 'string', $allowEmpty = false, $optional = false) {
+		if((!is_array($this->input) || !isset($this->input[$param])) && !$optional)
+			throw new \HttpException(400);
 
 		$originalValue = $this->input[$param];
 		switch ($type) {

@@ -6,47 +6,27 @@ use Doctrine\ORM\Event\PreFlushEventArgs;
 
 class ModelsListener {
 
-	private function log($model, $event, $type) {
-		error_log(get_class($model).'('.$model->getId().'): '.$type);
-	}
-
 	/** @PrePersist */
-	public function prePersistHandler($model, LifecycleEventArgs $event) {
-		$this->log($model, $event, 'PrePersist');
-	}
+	public function prePersistHandler($model, LifecycleEventArgs $event) {}
 
 	/** @PostPersist */
-	public function postPersistHandler($model, LifecycleEventArgs $event) {
-		$this->log($model, $event, 'PostPersist');
-	}
+	public function postPersistHandler($model, LifecycleEventArgs $event) {}
 
 	/** @PreUpdate */
-	public function preUpdateHandler($model, PreUpdateEventArgs $event) {
-		$this->log($model, $event, 'PreUpdate');
-	}
+	public function preUpdateHandler($model, PreUpdateEventArgs $event) {}
 
 	/** @PostUpdate */
-	public function postUpdateHandler($model, LifecycleEventArgs $event) {
-		$this->log($model, $event, 'PostUpdate');
-	}
+	public function postUpdateHandler($model, LifecycleEventArgs $event) {}
 
 	/** @PostRemove */
-	public function postRemoveHandler($model, LifecycleEventArgs $event) {
-		$this->log($model, $event, 'PostRemove');
-	}
+	public function postRemoveHandler($model, LifecycleEventArgs $event) {}
 
 	/** @PreRemove */
-	public function preRemoveHandler($model, LifecycleEventArgs $event) {
-		$this->log($model, $event, 'PreRemove');
-	}
+	public function preRemoveHandler($model, LifecycleEventArgs $event) {}
 
 	/** @PreFlush */
-	public function preFlushHandler($model, PreFlushEventArgs $event) {
-		$this->log($model, $event, 'PreFlush');
-	}
+	public function preFlushHandler($model, PreFlushEventArgs $event) {}
 
 	/** @PostLoad */
-	public function postLoadHandler($model, LifecycleEventArgs $event) {
-		$this->log($model, $event, 'PostLoad');
-	}
+	public function postLoadHandler($model, LifecycleEventArgs $event) {}
 }

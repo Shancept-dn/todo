@@ -11,6 +11,16 @@
 	<body>
 		<section class="main-actions"><!-- templates/actions.mst --></section>
 
+		<!-- Shares window -->
+		<section class="shares">
+			<div class="shares-data">
+				<h3>Shares</h3>
+				<div class="shares-data-container"><!-- templates/shares.mst --></div>
+				<input id="searchUsers" type="text" placeholder="Type login">
+				<button id="shareUserBtn" class="nice-button">Share</button>
+			</div>
+		</section>
+
 		<!-- Login/Join window -->
 		<section class="auth" style="display: none;">
 			<div class="login">
@@ -35,6 +45,7 @@
 
 		<!-- Scripts -->
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="bower_components/typeahead.js/dist/typeahead.jquery.min.js"></script>
 		<script src="bower_components/mustache.js/mustache.min.js"></script>
 		<script src="js/app.js"></script>
 	</body>

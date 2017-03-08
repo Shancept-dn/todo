@@ -44,6 +44,7 @@
 	 */
 	var showLoginWindow = function(authError){
 		$('.auth').show();
+		$('.shares').hide();
 		$('.todoapp').hide();
 		$('.main-actions').hide();
 
@@ -59,6 +60,7 @@
 	 */
 	var showAppWindow = function(){
 		$('.auth').hide();
+		$('.shares').hide();
 		$('.todoapp')[state.lists.length ? 'show' : 'hide']();
 
 		loadTemplate('actions').done(function(template){
@@ -488,6 +490,139 @@
 	$(document).on('click', '.clear-completed', function(){
 		//Выполняем клик по кноопку удаления всех незавершенных задач
 		$('.todo-list li.completed .destroy').click();
+	});
+
+	/**
+	 * Показать окно с данными расшаривания текущего списка
+	 * @param {boolean} reload перечитать данные из АПИ
+	 * @returns {boolean}
+	 */
+	var showShares = function(reload){
+		if(reload) {
+			rest('GET', 'roster/info', {id: localStorage['currentList']}).done(function(data){
+				state.info = data;
+				showShares();
+			}).fail(function(){
+				init();
+			});
+			return false;
+		}
+
+		$('.shares').show();
+		loadTemplate('shares').done(function(template){
+			//Рендерим html
+			var html = Mustache.render(template, state);
+			$('.shares-data-container').html(html).show();
+		});
+	};
+
+	/**
+	 * Typeahead поиск пользователей по логину
+	 */
+	$('#searchUsers').typeahead({
+		hint: true,
+		highlight: true,
+		minLength: 1
+	},{
+		async: true,
+		source: function (query, pSync, pAsync) {
+			return rest('GET', 'user/search', {query:query}).done(function(req){
+				//Запоминаем полученные данные
+				$('#searchUsers').get(0).qResults = {};
+				//Формируем список для typeahead
+				var list = [];
+				for(var i in req) {
+					$('#searchUsers').get(0).qResults[req[i].login] = req[i].id;
+					list.push(req[i].login);
+				}
+				return pAsync(list);
+			});
+		}
+	});
+
+	/**
+	 * Кнопка Share
+	 */
+	$(document).on('click', '#shareList', function(){
+		showShares();
+	});
+
+	/**
+	 * Сменить состояние readonly
+	 */
+	$(document).on('change', '.js-change-share', function(){
+		var share = $(this).closest('[data-id]'),
+			id = share.data('id'),
+			readonly = $(this).is(':checked');
+
+		rest('PUT', 'roster/share', {id: localStorage['currentList'], user_id: id, readonly: readonly?1:0}).always(function(){
+			showShares(true);
+		});
+	});
+
+	/**
+	 * Удалить расшаривание пользователю
+	 */
+	$(document).on('click', '.js-delete-share', function(){
+		var share = $(this).closest('[data-id]'),
+			id = share.data('id');
+
+		rest('DELETE', 'roster/share', {id: localStorage['currentList'], user_id: id}).always(function(){
+			showShares(true);
+		});
+	});
+
+	/**
+	 * Клик по окну расшаривания - предотвращаем всплывание событие
+	 */
+	$('.shares-data').click(function(){
+		return false;
+	});
+
+	/**
+	 * Клик по bg - скрыть окно расшаривания
+	 */
+	$('.shares').click(function(){
+		$(this).hide();
+	});
+
+	/**
+	 * Нажали Escape - скрыть окно расшаривания
+	 */
+	$(document).on('keydown', function(e){
+		if(e.which == 27) $('.shares').hide();
+	});
+
+	/**
+	 * Расшарить пользователя
+	 * @param {object} input поле ввода логина пользователя
+	 * @returns {boolean}
+	 */
+	var shareUser = function(input){
+		var value = $(input).typeahead('val'),
+			id = $(input).get(0).qResults[value];
+		if(!id) return false;
+		$(input).typeahead('val', '');
+
+		rest('PUT', 'roster/share', {id: localStorage['currentList'], user_id: id}).always(function(){
+			showShares(true);
+		});
+	};
+
+	/**
+	 * Enter в поле ввода логина пользователя
+	 */
+	$('#searchUsers').keydown(function(e){
+		if(e.which == 13) {
+			shareUser($(this));
+		}
+	});
+
+	/**
+	 * Клик по кнопке расшарить
+	 */
+	$('#shareUserBtn').click(function(){
+		shareUser($('#searchUsers'));
 	});
 
 	//Инициализируем приложение

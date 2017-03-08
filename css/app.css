@@ -1,3 +1,4 @@
+/* helpers */
 .pull-right { float: right; }
 input.has-error { border-color: #f77 !important; }
 
@@ -8,6 +9,7 @@ button.nice-button {
 	cursor: pointer;
 }
 
+/* main app windows with lists */
 .todoapp {
 	display: none;
 	margin-top: 80px;
@@ -16,6 +18,7 @@ button.nice-button {
 .todoapp.show-completed .todo-list .completed { display: list-item; }
 .todoapp.show-active .todo-list .completed { display: none; }
 
+/* Auth window */
 .auth {
 	position: relative;
 	margin: 100px 0 40px 0;
@@ -26,7 +29,6 @@ button.nice-button {
 	display: table;
 	width: 100%;
 }
-
 .auth .join, .auth .login {
 	display: table-cell;
 	width: 50%;
@@ -47,6 +49,7 @@ button.nice-button {
 	margin-bottom: 10px;
 }
 
+/* Header actions */
 .main-actions {
 	display: none;
 	font-size: 18px;

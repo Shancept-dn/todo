@@ -67,7 +67,7 @@ class Item extends \Controller {
 		$this->item = \Api::app()->db->getRepository('Models\Item')->crateItem($rosterId, $text);
 		if(!$this->item) throw new \HttpException(500);
 
-		return ['id' => $this->item->get_id()];
+		return ['id' => $this->item->getId()];
 	}
 
 	/**

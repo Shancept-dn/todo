@@ -1,8 +1,71 @@
-/*
+.pull-right { float: right; }
+input.has-error { border-color: #f77 !important; }
 
-app-template.css overrides
+button.nice-button {
+	border: solid 1px rgba(47, 47, 47, 0.2);
+	border-radius: 3px;
+	padding: 5px;
+	cursor: pointer;
+}
 
-remove this comment if used
-remove this file if not
+.todoapp {
+	display: none;
+	margin-top: 80px;
+}
+.todoapp.show-completed .todo-list li { display: none; }
+.todoapp.show-completed .todo-list .completed { display: list-item; }
+.todoapp.show-active .todo-list .completed { display: none; }
 
-*/
+.auth {
+	position: relative;
+	margin: 100px 0 40px 0;
+	font-size: 16px;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+	background: white;
+	box-sizing: border-box;
+	display: table;
+	width: 100%;
+}
+
+.auth .join, .auth .login {
+	display: table-cell;
+	width: 50%;
+	padding: 0 15px 20px 15px;
+}
+.auth .login { border-right: solid 1px #ededed; }
+.auth h3 { text-align: center; }
+.auth .nice-button {
+	font-size: 20px;
+	float: right;
+}
+.auth input {
+	width: 100%;
+	font-size: 16px;
+	box-sizing: border-box;
+	padding: 5px;
+	border: solid 1px rgba(47, 47, 47, 0.2);
+	margin-bottom: 10px;
+}
+
+.main-actions {
+	display: none;
+	font-size: 18px;
+	line-height: 48px;
+	box-sizing: border-box;
+	padding: 0 15px;
+	width: 100%;
+	min-width: 600px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 50px;
+	background: white;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+.main-actions select, .main-actions input {
+	padding: 5px;
+	font-size: 18px;
+	border: solid 1px rgba(47, 47, 47, 0.2);
+}
+.action-editing, .action-default { float: left; }
+.action-editing { display: none; }

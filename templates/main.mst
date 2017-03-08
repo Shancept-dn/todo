@@ -1,0 +1,36 @@
+<header class="header">
+	<input class="new-todo" placeholder="What needs to be done?" autofocus>
+</header>
+<section class="main">
+	{{^info.readonly}}
+	<input class="toggle-all" type="checkbox" {{#allDone}}checked{{/allDone}} >
+	<label for="toggle-all">Mark all as complete</label>
+	{{/info.readonly}}
+	<ul class="todo-list">
+		{{#info.items}}
+		<li data-id="{{id}}" class="{{#done}}completed{{/done}}">
+			<div class="view">
+				<input {{#info.readonly}}disabled{{/info.readonly}} class="toggle" type="checkbox" {{#done}}checked{{/done}} >
+				<label>{{text}}</label>
+				{{^info.readonly}}<button class="destroy"></button>{{/info.readonly}}
+			</div>
+			<input data-original="{{text}}" class="edit" value="">
+		</li>
+		{{/info.items}}
+	</ul>
+</section>
+<footer class="footer">
+	<span class="todo-count"><strong>{{left}}</strong> item left</span>
+	<ul class="filters">
+		<li>
+			<a rel="all" class="selected" href="#">All</a>
+		</li>
+		<li>
+			<a rel="active" href="#">Active</a>
+		</li>
+		<li>
+			<a rel="completed" href="#">Completed</a>
+		</li>
+	</ul>
+	{{^info.readonly}}<button class="clear-completed">Clear completed</button>{{/info.readonly}}
+</footer>

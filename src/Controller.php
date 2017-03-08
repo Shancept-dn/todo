@@ -10,7 +10,7 @@ class Controller {
 	 * Хранит массив входных данных из Request
 	 * @var array
 	 */
-	private $input;
+	protected $input;
 
 	/**
 	 * Конструктор класса

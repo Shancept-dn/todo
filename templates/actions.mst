@@ -1,0 +1,26 @@
+<div class="action-editing">
+	<input name="listName" type="text" id="listName" placeholder="List name">
+</div>
+
+<div class="action-default">
+	<button id="addList" class="nice-button">Add</button>
+	{{#lists.length}}
+	Current:
+	<select id="currentList">
+		{{#lists}}
+		<option value="{{id}}">{{name}}</option>
+		{{/lists}}
+	</select>
+	<button id="renameList" class="nice-button js-list-edit">Rename</button>
+	<button id="shareList" class="nice-button js-list-edit">Share</button>
+	<button id="deleteList" class="nice-button js-list-edit">Delete</button>
+	{{/lists.length}}
+	{{^lists.length}}
+	<span>&larr; Add your first list</span>
+	{{/lists.length}}
+</div>
+
+<div class="pull-right">
+	{{login}}
+	<button id="logout" class="nice-button">Logout</button>
+</div>

@@ -145,8 +145,6 @@ class Api {
 	private function render($jsonData, $httpCode = 200, $httpMessage = 'OK') {
 		header('HTTP/1.1 '.$httpCode.( false !== $httpMessage ? ' '.$httpMessage: '' ));
 
-		if($httpCode == 401) header('WWW-Authenticate: Basic realm="Todo"');
-
 		//Отправляем дополнительные headers
 		foreach($this->_headers as $header) header($header);
 

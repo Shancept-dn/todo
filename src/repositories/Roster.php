@@ -102,7 +102,7 @@ class Roster extends EntityRepository {
 		$dql = 	'SELECT r FROM Models\Roster r '.
 				'JOIN r.user ru LEFT JOIN r.shares rs '.
 				'LEFT JOIN rs.user rsu '.
-				'WHERE ru.id = ?1 OR rsu.id = ?1';
+				'WHERE ru.id = ?1 OR rsu.id = ?1 GROUP BY r';
 
 		return $this->getEntityManager()->createQuery($dql)
 			->setParameter(1, $userId)

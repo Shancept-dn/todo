@@ -6,7 +6,6 @@ class Item extends \Controller {
 
 	/**
 	 * Хранит модель дела из списка
-	 * Инициализируется в beforeAction
 	 * @var \Models\Item
 	 */
 	private $item;
@@ -35,6 +34,20 @@ class Item extends \Controller {
 	}
 
 	/**
+	 * Выполняетсмя после успешного выполнения экшена
+	 * @param string $action
+	 * @param string $method
+	 * @return bool
+	 */
+	public function afterAction($action, $method) {
+		//Сбрасываем кэш, связанный с застронутым списком дел
+		$rosterId = $this->item->getRoster()->getId();
+		\Api::app()->cache->deleteByTag('Roster|'.$rosterId);
+
+		return parent::afterAction($action, $method);
+	}
+
+	/**
 	 * Добавить дело в список
 	 * @return array
 	 * @throws \HttpException
@@ -50,11 +63,11 @@ class Item extends \Controller {
 		if(!\Api::app()->db->getRepository('Models\Roster')->checkRosterAllowEditing($rosterId, $userId))
 			throw new \HttpException(403);
 
-		//Создаем список
-		$itemId = \Api::app()->db->getRepository('Models\Item')->crateItem($rosterId, $text);
-		if(!$itemId) throw new \HttpException(500);
+		//Создаем запись в списке
+		$this->item = \Api::app()->db->getRepository('Models\Item')->crateItem($rosterId, $text);
+		if(!$this->item) throw new \HttpException(500);
 
-		return ['id' => $itemId];
+		return ['id' => $this->item->get_id()];
 	}
 
 	/**
@@ -63,7 +76,7 @@ class Item extends \Controller {
 	 * @throws \HttpException
 	 */
 	public function actionDeleteDELETE() {
-		//Удаляем список
+		//Удаляем запись из списка
 		if(!\Api::app()->db->getRepository('Models\Item')->deleteItem($this->item)) throw new \HttpException(500);
 
 		return ['result' => 'success'];
@@ -120,7 +133,6 @@ class Item extends \Controller {
 		//Проверяем может ли текущий пользователь редактировать список
 		if(!\Api::app()->db->getRepository('Models\Roster')->checkRosterAllowEditing($roster, $userId))
 			throw new \HttpException(403);
-
 
 		return $item;
 	}

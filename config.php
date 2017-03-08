@@ -11,4 +11,10 @@ return [
 		'isDevMode' => true,
 		'models' => __DIR__.'/src/models'
 	],
+
+	//Настройки memcached
+	'memcached' => [
+		'host' => 'localhost',
+		'port' => 11211,
+	]
 ];

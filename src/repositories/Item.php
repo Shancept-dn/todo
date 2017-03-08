@@ -10,7 +10,7 @@ class Item extends EntityRepository {
 	 * Создает дело в списке
 	 * @param int $rosterId id списка дел
 	 * @param string $text
-	 * @return bool|int
+	 * @return bool|\Models\Item
 	 */
 	public function crateItem($rosterId, $text) {
 		//Находим список
@@ -25,7 +25,7 @@ class Item extends EntityRepository {
 		$this->getEntityManager()->persist($item);
 		$this->getEntityManager()->flush();
 
-		return $item->getId();
+		return $item;
 	}
 
 	/**

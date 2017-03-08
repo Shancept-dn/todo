@@ -33,6 +33,9 @@ class Roster extends \Controller {
 		//Текущий аутентифицированный пользователь
 		$userId = \Api::app()->auth->getUser()->getId();
 
+		//Проверяем есть ли информация в кэше
+		if(false !== $info = \Api::app()->cache->get('roster/info|'.$userId.'|'.$roster->getId())) return $info;
+
 		//Основная информация
 		$info = [
 			'id' => $roster->getId(),
@@ -54,6 +57,13 @@ class Roster extends \Controller {
 		} else { //Иначе - можно ли редактировать список
 			$info['readonly'] = !\Api::app()->db->getRepository('Models\Roster')->checkRosterAllowEditing($roster, $userId);
 		}
+
+		//Сохраняем данные в кэше
+		\Api::app()->cache->set(
+			'roster/info|'.$userId.'|'.$roster->getId(),
+			$info,
+			'Roster|'.$roster->getId()
+		);
 
 		return $info;
 	}
@@ -85,6 +95,9 @@ class Roster extends \Controller {
 		//Переименовываем список
 		if(!\Api::app()->db->getRepository('Models\Roster')->renameRoster($roster, $name)) throw new \HttpException(500);
 
+		//Сбрасываем кэш, связанный с застронутым списком
+		\Api::app()->cache->deleteByTag('Roster|'.$roster->getId());
+
 		return ['result' => 'success'];
 	}
 
@@ -99,6 +112,9 @@ class Roster extends \Controller {
 
 		//Получаем список
 		$roster = $this->findAndCheckRoster($id);
+
+		//Сбрасываем кэш, связанный с застронутым списком
+		\Api::app()->cache->deleteByTag('Roster|'.$roster->getId());
 
 		//Удаляем список
 		if(!\Api::app()->db->getRepository('Models\Roster')->deleteRoster($roster)) throw new \HttpException(500);
@@ -143,7 +159,7 @@ class Roster extends \Controller {
 				\Api::app()->db->getRepository('Models\Share')->addShare($roster, $user, $readonly);
 			} else {
 				$shared->setReadonly($readonly);
-				\Api::app()->db->getRepository('Models\Share')->saveShare($share);
+				\Api::app()->db->getRepository('Models\Share')->saveShare($shared);
 			}
 			return ['result' => 'success'];
 		}
@@ -154,6 +170,9 @@ class Roster extends \Controller {
 			}
 			return ['result' => 'success'];
 		}
+
+		//Сбрасываем кэш, связанный с застронутым списком
+		\Api::app()->cache->deleteByTag('Roster|'.$roster->getId());
 
 		throw new \HttpException(400);
 	}
